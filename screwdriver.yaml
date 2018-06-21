@@ -1,0 +1,35 @@
+shared:
+    image: node:6
+
+jobs:
+    job1:
+        steps:
+          - echo: echo hello
+        requires: [~commit, ~pr]
+    job2:
+        steps:
+          - echo: sleep 20
+        requires: [~commit, ~pr]
+    job3:
+        steps:
+          - echo: sleep 100
+        requires: [~commit, ~pr]
+    notblocked:
+        steps:
+          - echo: echo bye
+        requires: job1
+    bbJob2:
+        steps:
+          - echo: echo bye
+        requires: job1
+        blockedBy: ~job2
+    bbJob23:
+        steps:
+            - echo: echo bye
+        requires: job1
+        blockedBy: [~job2, ~job3]
+    bbExternal:
+        steps:
+          - echo: echo bye
+        blockedBy: ~sd@984:A
+        requires: [~commit, ~pr]
